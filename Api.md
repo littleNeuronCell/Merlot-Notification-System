@@ -3,15 +3,15 @@
 ## Notify
 The Notify is the main service we provide and will send notifications to clients based on their preference type/ type of notification
 ```javascript 
-string notify(Client client, String type, Object contents);
+Object notify(Client client, String type, Object contents);
 ```
 @return: Will return a json object with contains the following attributes, respCode and respMsg
-  - **respCode**: will return a html response code 
-  - **respMsg**: will return a message notifying whether or no the function succeeded or why it failed 
+>   **respCode**: will return a html response code 
+>   **respMsg**: will return a message notifying whether or no the function succeeded or why it failed 
 
 @params:
->client: will use a receive a client object with their relevant details such as email, cell, name, preferred notify method, etc...  
->type: will specify what type of notifcation needs to be sent, this will affect how we interact with the contents  
+>**client**: will use a receive a client object with their relevant details such as email, cell, name, preferred notify method, etc...  
+>**type**: will specify what type of notifcation needs to be sent, this will affect how we interact with the contents  
 >  - valid types are: OTP, BalanceUpdate, BalanceEnquiry, BankStatement
 
 example usage: DUE TO CHANGE
