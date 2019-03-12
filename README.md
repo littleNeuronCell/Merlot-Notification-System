@@ -1,5 +1,8 @@
 # Merlot-Notification-System
 ###  <a href="https://github.com/littleNeuronCell/Merlot-Notification-System/blob/master/Api.md" target="_blank">API reference</a>
+###  <a href="https://github.com/littleNeuronCell/Merlot-Notification-System/issues" target="_blank">Issues</a>
+
+
 ## Other Subsystems:
 - ATM Simulation
 - Authentication
