@@ -6,7 +6,7 @@ The Notify is the main service we provide and will send notifications to clients
 Object notify(Client client, String type, Object contents);
 ```
 @return: Will return a json object with contains the following attributes, respCode and respMsg
->   **respCode**: will return a html response code 
+>   **respCode**: will return a html response code  
 >   **respMsg**: will return a message notifying whether or no the function succeeded or why it failed 
 
 @params:
