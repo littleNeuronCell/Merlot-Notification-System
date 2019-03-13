@@ -1,0 +1,20 @@
+{
+  "name": "notification-system",
+  "version": "1.0.0",
+  "description": "a  SMTP server",
+  "main": "index.js",
+  "dependencies": {
+    "express": "^4.16.4",
+    "nodemailer": "^5.1.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/littleNeuronCell/Merlot-Notification-System.git"
+  },
+  "author": "Xiao Jian Li <u16099860@tuks.co.za>",
+  "license": "ISC"
+}
