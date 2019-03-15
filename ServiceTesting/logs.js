@@ -21,7 +21,7 @@ exports.searchALL= function(){
 	     	return "ERROR";
     	}
 	  	rows.forEach((row) =>{
-      	 	var jsonResp = '{"log_id":"'+ row.log_id+'", "log_timestamp":"'+ row.log_timestamp +'", "log_client_id":"'+row.log_client_id + '", "log_type":"'+row.log_type +'","log_content":"'+row.log_content +'"}';
+      	 	var jsonResp = '{"ID":"'+ row.log_id+'", "Timestamp":"'+ row.log_timestamp +'", "ClientID":"'+row.log_client_id + '", "Type":"'+row.log_type +'","Content":"'+row.log_content +'"}';
 	    	console.log(jsonResp);
 		})
       	return "No logs found"	
@@ -31,7 +31,6 @@ exports.searchALL= function(){
 		 
 		  
 }
-
 
 exports.pullLogs = function(client_id, timestamp, notificationType, restrict){
 		// return pull(client_id, timestamp, notificationType, restrict);
