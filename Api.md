@@ -75,7 +75,7 @@ request(options, function (error, response, body) {
 Response response = client.newCall(request).execute();
 ```
 NodeJS
-```
+```javascript
 var request = require("request");
 
 var options = { method: 'POST',
