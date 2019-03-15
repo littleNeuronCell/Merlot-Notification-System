@@ -8,7 +8,7 @@
 //     console.log('Connected to the in-memory SQlite database.');
 //   });
 
-var logs = require("./logs")	
+var logs = require("./logs");	
 
 exports.ConsoleInput = function(){
 	//Allow the terminal to multitask by creating another process decicated to listening for commands
@@ -17,44 +17,47 @@ exports.ConsoleInput = function(){
 	stdin.addListener("data", function(d) {
 	  	var commands = d.toString().trim();
 	  	commands = commands.split(" ");
-	  	if(commands.length == 1 && commands[0] != 'exit')
-	  	{
-	  		client_id = commands[0];
-	  		timestamp = null;
-	  		notificationType = null;
-	  		restrict = "all";
-	  		output= logs.pullLogs(client_id, timestamp, notificationType, restrict);
-	  	}
-	  	else if(commands[0] == 'exit')
-	  	{
-	  		console.log("============ Stopping Server ============");
-			process.exit();
-	  	}
-	  	else
-	  	{
-			client_id = commands[0];
-	  		timestamp = commands[1];
-	  		notificationType = commands[2];
-	  		restrict = commands[3];
-	  		output = pullLogs(client_id, timestamp, notificationType, restrict);
-	  	}
+	  	switch(commands[0]){
+	  		case "1":
+	  		case "exit":{
+				console.log("============ Stopping Server ============");
+				process.exit();
+	  			break;
+	  		}
+	  		case "2":
+	  		case "view":{
+		  	// 	if(commands.length == 1)
+		  	// 	{
+		  			console.log(logs.searchALL());
+		  	// 	}
+		  	// 	else
+		  	// 	{
+					// client_id = commands[0];
+		  	// 		timestamp = commands[1];
+		  	// 		notificationType = commands[2];
+		  	// 		restrict = commands[3];
+		  	// 		output = logs.pullLogs(client_id, timestamp, notificationType, restrict);
+		  	// 		console.log(output);
+		  	// 	}
+	  			break;
+	  		}
+	  		case "3":
+	  		case "insert":{
+	  			if(commands.length == 4)
+	  				logs.insert(commands[1],commands[2],commands[3])
+	  			else{
+	  				console.log("Insert <client_id> <type> <content>");
+	  			}
+	  			break;
+	  		}
+	  		default:{
+				console.log("============ Commands ============");
+				console.log("1) exit");
+				console.log("2) View Logs");
+				console.log("3) Insert <client_id> <type> <content>");
+			}			
 
-	var cmd = command[0];
-	switch(cmd){
-		case "1":
-		case "exit":{
-			stdin.removeAllListeners('data');
-			console.log("============ Stopping Server ============");
-			process.exit();
-			break;
-		}
-		
-		default:{
-			console.log("============ Commands ============");
-			console.log("1) exit");
-			console.log("");
+	  	}		
 
-
-		}
-	}		
-});
+	});
+}

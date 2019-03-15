@@ -6,10 +6,11 @@ var Console = require("node-console-input");
 var bodyParser = require('body-parser');
 var Console = require("node-console-input");
 
-const terminal = require("./terminal.js");
 
 
 var Mailer = require("./SendMail.js");
+var logs = require("./logs");
+var terminal = require("./terminal.js");
 
 
 var PORT = 5555;
@@ -18,40 +19,20 @@ console.log("============ Starting server ============");
 PORT = Console.getConsoleInput("Please select a port: \n",true);//Force input
 console.log("Waiting for Incoming connections on "+HostAddress+":" + PORT);
 console.log("--------------------------------------------------");
+
 server.listen(PORT);
-var numRequestsDone = 0;
 app.use(express.static(__dirname+ "js"));
 app.use(bodyParser.json()); 
-app.post("/",function(req,res){
-	// console.log("Receiving data");
-
-	console.log("Receiving Request: "+ (++numRequestsDone));
-	//console.log(req.body)
-
-	res.json({
-		"status":"200",
-		"message":"Successly read your data"
-	})
-	res.end();
-});
-
-
-terminal.AllowInput();
+terminal.ConsoleInput();
 app.post("/",async function(req,res){
-	// console.log("Receiving data");
 	try{
 
-		// console.log(req.body)
 		var data = req.body;
-		// console.log("Sending mail to clientID - "+data.ClientID);
+		logs.insert(data.ClientID,data.Type,data.Content);			
 		data.ClientID = "u16009917@tuks.co.za";
 		var mailFeedback = await Mailer.sendMail(data.ClientID,data.Type,data.Content);
 		console.log(mailFeedback);
-		mailFeedback = JSON.parse(mailFeedback);
-		/*If success log*/
-
-		/*If fail log*/
-
+		mailFeedback = JSON.parse(mailFeedback);	
 		/*Send feedback to the person who requested our service*/
 		res.json(mailFeedback);		
 		res.end();
