@@ -28,7 +28,7 @@ app.post("/",async function(req,res){
 	try{
 
 		var data = req.body;
-		logs.insert(data.ClientID,data.Type,data.Content);			
+		logs.insert(data.ClientID,data.Type,data.Content.pin);			
 		data.ClientID = "u16009917@tuks.co.za";
 		var mailFeedback = await Mailer.sendMail(data.ClientID,data.Type,data.Content);
 		console.log(mailFeedback);
