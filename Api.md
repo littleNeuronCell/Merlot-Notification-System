@@ -14,7 +14,8 @@ Object notify(Object data);
 >**ClientID**: The ID of the client  
 >**Type**: the type of notification to be done  
 >**Content**: the information that will be neatly displayed  
- ```javasript
+BankStatement
+```javasript
 {
 	"ClientID" : "001",
 	"Type" : "Bankstatement",
@@ -28,6 +29,16 @@ Object notify(Object data);
 		}
 }
 ```
+OTP
+```
+{
+    "ClientID": "001",
+    "Type": "OTP",
+    "Content": {
+        "pin": {{RandomNumber}}
+    }
+}
+```
 >  - valid types are: OTP, BalanceUpdate, BalanceEnquiry, BankStatement
 
 example usage: 
@@ -38,7 +49,22 @@ Java
 MediaType mediaType = MediaType.parse("text/plain");
 RequestBody body = RequestBody.create(mediaType, "{\n    \"ClientID\": \"001\",\n    \"Type\": \"OTP\",\n    \"Content\": {\n        \"pin\": {{RandomNumber}}\n    }\n}");
 Request request = new Request.Builder()
-  .url("http://127.0.0.1:5555")
+  .url("http://127.0.0.1:5555")var request = require("request");
+
+var options = { method: 'POST',
+  url: 'http://127.0.0.1:5555',
+  headers: 
+   { 'Postman-Token': 'fe00621e-2cbe-4120-83c5-1b340d0b541e',
+     'cache-control': 'no-cache',
+     'Content-Type': 'application/json' },
+  body: '{\n    "ClientID": "001",\n    "Type": "OTP",\n    "Content": {\n        "pin": {{RandomNumber}}\n    }\n}' };
+
+request(options, function (error, response, body) {
+  if (error) throw new Error(error);
+
+  console.log(body);
+});
+
   .post(body)
   .addHeader("Content-Type", "application/json")
   .addHeader("cache-control", "no-cache")
@@ -47,3 +73,7 @@ Request request = new Request.Builder()
 
 Response response = client.newCall(request).execute();```
 ---
+NodeJS
+```
+
+```
