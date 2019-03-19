@@ -27,5 +27,9 @@
   - Send miniStatement via Email
 - **Client Account System**:
   - Notify client of balance update
+
+### Subsystems that we interact with
 - **Reporting**:
-  - View Notification Log
+  - Pushing logs of notifications
+- **Client Information**:
+  - Getting Client information
