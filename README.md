@@ -1,5 +1,5 @@
 # Merlot-Notification-System
-###  <a href="https://github.com/littleNeuronCell/Merlot-Notification-System/blob/master/Api.md" target="_blank">API reference</a>
+###  <a href="https://github.com/littleNeuronCell/Merlot-Notification-System/blob/master/Documentation/Api.md" target="_blank">API reference</a>
 ###  <a href="https://github.com/littleNeuronCell/Merlot-Notification-System/issues" target="_blank">Issues</a>
 
 
