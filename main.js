@@ -1,3 +1,4 @@
+/*This file is just for testing purpose, to test logSystem*/
 var express = require("express");
 var app = express();
 var server = require("http").createServer(app);
