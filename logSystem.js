@@ -1,34 +1,38 @@
 exports.logSystem = function (jsonObj) {
 
-    let jsObj = JSON.parse(jsonObj);
-    let fileName = "notificationLogs.txt";
-    let client = jsObj.client_id;
-    const fs = require('fs');
-    let type = jsObj.type;
-    let content = jsObj.content;
-    var enteries = 0;
-    var totalLogs = 20;
-    fs.stat(fileName, function(err, stats) {
+    let jsObj = JSON.parse(jsonObj);   // after receiving json object parse it to retrieve valuable info to work with
+    let fileName = "notificationLogs.txt"; // file name, may be changed
+    let client = jsObj.client_id; // retrieving client id 
+    const fs = require('fs'); // creation of file system obj
+    let type = jsObj.type; // type of notification
+    let content = jsObj.content; // content of notification
+    var enteries = 0; // this var will hold num of entries
+    var totalLogs = 20; // how much logs is allowed, might be bigger ammount
+    fs.stat(fileName, function(err, stats) { // if file does not exist
         if (err){
-            insertLog(client,type,content, fileName, fs, 1);
+            insertLog(client,type,content, fileName, fs, 1); // if error is thrown we will going to call
+            //insertClient that will create and add 
+            //new entery to the file
         }
-        else if (stats.isFile()) {
+        else if (stats.isFile()) { // if file exists
            let reader = fs.createReadStream(fileName);
-           reader.on('error',  err => {
-               return err;
+            // we going to read the file to get number of enteries. Make it as separate function
+               //does not work, because everything is assynchronouse 
+           reader.on('error',  err => { 
+               return err; // if failed to read will return error
            });
-           reader.on('data', function(chunk){
+           reader.on('data', function(chunk){ // read character by character
                 for(j = 0; j < chunk.length; j++)
                 {
                     if(chunk[j] == 10) // if row hit new line symbol. 10 represents new line
                     {
-                        enteries++;
+                        enteries++; // increase number of entries
 
                     }
                 }
             }).on('end', function(){
                 enteries++;
-                insertLog(client,type,content, fileName, fs, enteries);
+                insertLog(client,type,content, fileName, fs, enteries); // in the end of reading we will insert new entry
 
             });
 
@@ -37,10 +41,10 @@ exports.logSystem = function (jsonObj) {
 
     });
 
-
+    //Responsible for inserting logs
     function insertLog(client,type,content, fileName,fs, number) {
 
-       console.log("this is numbers: "+ number);
+       //console.log("this is numbers: "+ number);
        var data = number+" "+client + " [" + new Date() + "] " + type + " " + content + "\n";
         var buffer = new Buffer.from(data);
         fs.open(fileName, 'a+', function (err, fd) {
@@ -51,6 +55,8 @@ exports.logSystem = function (jsonObj) {
                     if(err) throw 'error writing to log file: ' + err;
                         fs.close(fd, function () {
                             console.log('wrote to file successfully');
+                            
+                            //This is a dummy function, we will pass the name of the reporting function that is responsible for receiving logs
                             var funcName = function(jsObj) {
                                 var resp;
                                 //console.log(typeof jsObj);
@@ -68,11 +74,13 @@ exports.logSystem = function (jsonObj) {
                                 }
                                 return resp;
                             };
+                            // if number of entries exceeds number of allowed logs
                             if(number >= totalLogs)
                             {
-                                if(pushToReporting(fileName, enteries, fs, funcName))
+                                if(pushToReporting(fileName, enteries, fs, funcName)) // we going to try and push it to reporting
                                 {
-                                    console.log("should be here");
+                                    //console.log("should be here");
+                                    //this part does not want to clean anything
                                     fs.truncate(fileName, 0, function(){console.log('logs are sent to reporting and log file is cleaned')});
                                 }
                             }
@@ -80,9 +88,14 @@ exports.logSystem = function (jsonObj) {
             });
         });
     }
-
+    //This function responsible for pushing to reporting
+    /*
+    * fileName - name of log file
+    * ent - number of entries
+    * fs - file system object
+    * funcName - name of reporting function to where we will sent our file content
+    */
     function pushToReporting(fileName, ent, fs, funcName) {
-        //funcName({hey: "hey"});
         let reader = fs.createReadStream(fileName);
         let spaceNum = 0;
         let space = 32;
@@ -101,7 +114,7 @@ exports.logSystem = function (jsonObj) {
                 {
                    str += String.fromCharCode(chunk[i]);
                     i++;
-                }
+                } // the following process retrieves info from every line in log file. Change to javascript object
                 var obj = null;
                 var timestamp = str.substring(str.indexOf("["), str.indexOf("]"));
                 timestamp = timestamp.replace("[","");
@@ -116,13 +129,13 @@ exports.logSystem = function (jsonObj) {
                 var content = str.substring();
                 str = str.replace(content, "");
                 obj = {number: num,client_id: client,timestamp : timestamp, type: type, content: content};
-                arr[j] = obj;
+                arr[j] = obj; // push to array of js objects
                 i++;
             }
 
         }).on('end', function(){
-            if(JSON.parse(funcName(arr)).status === "Success")
-            {
+            if(JSON.parse(funcName(arr)).status === "Success") 
+            {// if we will receive success from reporting subsystem we will return true to the main function in this module
                 console.log("Success");
                 return true;
             }
