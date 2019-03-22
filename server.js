@@ -12,11 +12,11 @@ var Mailer = require("./SendMail.js");
 var logs = require("./logSystem.js");
 var terminal = require("./terminal.js");
 
+const PORT = process.env.PORT || 5000;
 
-var PORT = 5555;
 var HostAddress = os.hostname();
 console.log("============ Starting server ============");
-PORT = Console.getConsoleInput("Please select a port: \n",true);//Force input
+// PORT = Console.getConsoleInput("Please select a port: \n",true);//Force input
 console.log("Waiting for Incoming connections on "+HostAddress+":" + PORT);
 console.log("--------------------------------------------------");
 

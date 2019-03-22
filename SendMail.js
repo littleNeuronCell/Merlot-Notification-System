@@ -2,12 +2,13 @@ const nodemailer = require("nodemailer");
 exports.sendMail = async function(toMail,type,content){
     try{
     let tp = nodemailer.createTransport({
-            service: "smtp.up.ac.za",
+            service: "Gmail",
+            // service: "smtp.up.ac.za",
             auth: {
-                // user: "MerlotClientNotifcation@gmail.com",
-                // pass: "oQCpfUuLpPZh3rPhjRpj"
-                user: "u16009917@tuks.co.za",
-                pass: "Viper3489753489"
+                user: "MerlotClientNotifcation@gmail.com",
+                pass: "oQCpfUuLpPZh3rPhjRpj"
+                // user: "u16009917@tuks.co.za",
+                // pass: "Viper3489753489"
             }
         });
         let mail = {
@@ -72,13 +73,13 @@ function OTP(content){
     s+='            <div style="padding: 60px 4vw 0 4vw; font: bold 20px \'Varela Round\', sans-serif; color: white !important; text-align: center;">'
     s+='                <span>Good Day [Name Surname]</span><br/><br/>'
     s+='                <span style="font: 15px \'Varela Round\', sans-serif; position: relative; top: 50px; color:white !important">'
-    s+='                    A new One-Time-Pin has been generate <span>'+content.pin+'</span> <br/>'
+    s+='                    A new One-Time-Pin has been generated <span>'+content.pin+'</span> <br/>'
     s+='                    This email was sent for the purpose of a one time authentication usage,<br/>'
     s+='                    if this was not you please contact 000 000 0000 or ignore this email.<br/>'
     s+='                    Thank you for using the FNB app. <br/>'
     s+='                </span><br/>'
     s+='                <span style="position: relative; top: 70px; font: 15px \'Varela Round\', sans-serif; border-top: solid 1px white;color: white !important">'
-    s+='                    Terms · Privacy · <a href="https://www.fnb.co.za/" target="_blank" style="text-decoration: none; color: white;">Goto FNB website</a>'
+    s+='                    Terms · Privacy · <a href="https://www.fnb.co.za/" target="_blank" style="text-decoration: none; color: white;">Go to FNB website</a>'
     s+='                </span>'
     s+='                <div style="height: 15vh;"></div>'
     s+='            </div>'
@@ -113,7 +114,7 @@ function card(content){
     s+='                Thank you for using the FNB app. <br>'
     s+='                </span><br/>'
     s+='                <span style="position: relative; top: 70px; font: 15px \'Varela Round\', sans-serif; border-top: solid 1px white;color: white !important">'
-    s+='                    Terms · Privacy · <a href="https://www.fnb.co.za/" target="_blank" style="text-decoration: none; color: white;">Goto FNB website</a>'
+    s+='                    Terms · Privacy · <a href="https://www.fnb.co.za/" target="_blank" style="text-decoration: none; color: white;">Go to FNB website</a>'
     s+='                </span>'
     s+='                <div style="height: 15vh;"></div>'
     s+='            </div>'
@@ -146,7 +147,7 @@ function generic(content){
     s+='                <br/>'
     s+='                </span><br/>'
     s+='                <span style="position: relative; top: 70px; font: 15px \'Varela Round\', sans-serif; border-top: solid 1px white;color: white !important">'
-    s+='                    Terms · Privacy · <a href="https://www.fnb.co.za/" target="_blank" style="text-decoration: none; color: white;">Goto FNB website</a>'
+    s+='                    Terms · Privacy · <a href="https://www.fnb.co.za/" target="_blank" style="text-decoration: none; color: white;">Go to FNB website</a>'
     s+='                </span>'
     s+='                <div style="height: 15vh;"></div>'
     s+='            </div>'
