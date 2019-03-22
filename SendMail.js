@@ -19,25 +19,38 @@ exports.sendMail = async function(toMail,type,content){
         // console.log("Message sent: %s", info.messageId);
         // console.log(info);
         if(info.rejected.length>0){
-            return '{ "status": 400, "message":"Failed to send mail to '+info.rejected+'" }'
+            return response("failed","Failed to send mail to "+info.rejected);
         }
         else
-            return '{ "status": 200, "message":"Mail sent successfully" }'
+            return response("success","Mail sent successfully");
     }catch(error){
-        return error
+        return response("Fatal error",error);
     }
 };    
-
+function response(status,message){
+    var response = {
+        "status" : status,
+        "timestamp": Math.floor(Date.now()),
+        "message":message
+    }
+    return response
+}
 
 
 function formatContent(type, content){
     switch(type.toLowerCase()){
         case "otp":{
-            return OTP(content)
+            return OTP(content);
             break;
         }
-
-
+        case "card" :{
+            return "to be completed";
+            break;
+        }
+        case "generic" :{
+            return "to be completed";
+            break;
+        }
         default:{
             throw '{ "status": 400, "message":"Invalid Notification Type" }'
         }
