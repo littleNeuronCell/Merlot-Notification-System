@@ -28,6 +28,16 @@ describe('Database Testing"', function () {
     });
 });
 
+/*
+describe('Push testing',function(){
+	it("Push data to Reporting",function(){
+		var res = log.pushTest("notificationLogs.txt",21,fs);
+		console.log(res);
+   		expect(res).to.equal(true);
+
+	}); 	
+})
+*/
 
 
 describe('API testing',function(){
@@ -52,16 +62,6 @@ var OTP = {
 }
 
 
-/*
-describe('Push testing',function(){
-	it("Push data to Reporting",function(){
-		var res = log.pushTest("notificationLogs.txt",21,fs);
-		console.log(res);
-   		expect(res).to.equal(true);
-
-	}); 	
-})
-*/
 function pausecomp(millis)
 {
     var date = new Date();
