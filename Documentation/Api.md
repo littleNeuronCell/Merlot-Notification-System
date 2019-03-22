@@ -15,6 +15,9 @@ http://someLinkToBeAddedHere:port/
 >**ClientID**: The ID of the client  
 >**Type**: the type of notification to be done  
 >**Content**: the information that will be neatly displayed  
+>  
+> **valid types are**: OTP, card, generic
+
 ### Example Json
 card
 ```javasript
@@ -48,7 +51,7 @@ Generic
         "file":{{filesent}}
     }
 }
->  - valid types are: OTP, BalanceUpdate, BalanceEnquiry, BankStatement
+```
 
 ### example usage: 
 Java
