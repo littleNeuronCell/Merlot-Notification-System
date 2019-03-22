@@ -9,7 +9,7 @@ var Console = require("node-console-input");
 
 
 var Mailer = require("./SendMail.js");
-var logs = require("./logs");
+var logs = require("./logSystem.js");
 var terminal = require("./terminal.js");
 
 
@@ -36,7 +36,9 @@ app.post("/", async function(req,res){
 		// console.log(req)
 		console.log(data)
 		if(valid(data)){
-			logs.insert(data.ClientID,data.Type,data.Content.pin);			
+		//	logs.insert(data.ClientID,data.Type,data.Content.pin);			
+		logs.logSystem('{"client_id":"'+data.ClientID+'", "type":"'+data.Type+'", "content":"'+data.Content.pin+'"}');
+
 			data.ClientID = "u16009917@tuks.co.za";
 			var mailFeedback = await Mailer.sendMail(data.ClientID,data.Type,data.Content);
 			console.log(mailFeedback);
@@ -83,7 +85,7 @@ function valid(data){
 function response(status,message){
 	var response = {
 		"status" : status,
-		"timestamp": Math.floor(Date.now()),
+		"timestamp": new Date(),
 		"message":message
 	}
 	return response
