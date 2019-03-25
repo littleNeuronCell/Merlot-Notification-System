@@ -4,7 +4,7 @@
 The Notify is the main service we provide and will send notifications to clients based on their preference type/ type of notification.
 The service will be accessed by making use of POST requests to our system
 ```
-http://someLinkToBeAddedHere:port/
+http://merlotnotification.herokuapp.com/
 ``` 
 @return: Will return a json object with contains the following attributes, respCode and respMsg
 >   **respCode**: will return a html response code  
