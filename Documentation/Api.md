@@ -6,7 +6,7 @@ The service will be accessed by making use of POST requests to our system
 ```
 http://merlotnotification.herokuapp.com/
 ``` 
-@return: Will return a json object with contains the following attributes, respCode and respMsg
+@return: Will return a json object with contains the following attributes, status, timestamp and message
 >   **respCode**: will return a html response code  
 >   **respMsg**: will return a message notifying whether or no the function succeeded or why it failed 
 >   for additional info please consult our table below  
@@ -103,4 +103,19 @@ request(options, function (error, response, body) {
   console.log(body);
 });
 
+```
+#### Return message examples:
+```JSON
+{
+    "status": "success",
+    "timestamp": "2019-03-25T07:50:27.531Z",
+    "message": "Mail sent successfully"
+}
+```
+```JSON
+{
+    "status": "failed",
+    "timestamp": "2019-03-25T07:50:27.531Z",
+    "message": "Invalid Notification Type or Missing arguements"
+}
 ```
