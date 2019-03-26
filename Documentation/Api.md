@@ -11,6 +11,7 @@ http://merlotnotification.herokuapp.com/
 >   **timestamp**: will return the date it has taken place  
 >   **message**: will return a message notifying whether or no the function succeeded or why it failed   
 >   for additional info please consult our table below  
+
 @params:  
 >**data**: Data is an JSON object containing all our relevant information, explaination to follow  
 >**ClientID**: The ID of the client  
