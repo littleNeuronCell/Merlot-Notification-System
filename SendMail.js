@@ -3,15 +3,18 @@ exports.sendMail = async function(toMail,type,content){
     try{
     let tp = nodemailer.createTransport({
             service: "Gmail",
+            // service: "smtp.up.ac.za",
             auth: {
                 user: "MerlotClientNotifcation@gmail.com",
                 pass: "oQCpfUuLpPZh3rPhjRpj"
+                // user: "u16009917@tuks.co.za",
+                // pass: "Viper3489753489"
             }
         });
         let mail = {
             from: '"MerlotNoReply" <MerlotClientNotifcation@gmail.coma>',
             to: toMail,
-            subject: "Notification "+ type ,
+            subject:(type == "generic" ? content.subject : "Notification " + type) ,
             html: formatContent(type,content)
         };
 
@@ -19,25 +22,38 @@ exports.sendMail = async function(toMail,type,content){
         // console.log("Message sent: %s", info.messageId);
         // console.log(info);
         if(info.rejected.length>0){
-            return '{ "status": 400, "message":"Failed to send mail to '+info.rejected+'" }'
+            return response("failed","Failed to send mail to "+info.rejected);
         }
         else
-            return '{ "status": 200, "message":"Mail sent successfully" }'
+            return response("success","Mail sent successfully");
     }catch(error){
-        return error
+        return response("Fatal error",error);
     }
 };    
-
+function response(status,message){
+    var response = {
+        "status" : status,
+        "timestamp": Math.floor(Date.now()),
+        "message":message
+    }
+    return response
+}
 
 
 function formatContent(type, content){
     switch(type.toLowerCase()){
         case "otp":{
-            return OTP(content)
+            return OTP(content);
             break;
         }
-
-
+        case "card" :{
+            return card(content);
+            break;
+        }
+        case "generic" :{
+            return generic(content);
+            break;
+        }
         default:{
             throw '{ "status": 400, "message":"Invalid Notification Type" }'
         }
@@ -46,49 +62,106 @@ function formatContent(type, content){
 
 
 function OTP(content){
-    console.log(content.pin);
-var s ="";
-s+='<body>'
-s+='<div style="background: #f8f8f8">'
-s+='        <link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet">'
-s+='        <style>'
-s+='            a:link, a:visited{'
-s+='                text-decoration: none;'
-s+='                color: white !important;'
-s+='                transition: all 1s linear;'
-s+='            }'
-s+='            .ii a[href] {color:white !important;}    '
-s+='            span.im {color:white !important;}    '
-s+='            a:hover, a:active{'
-s+='                color: #bdbdbd;'
-s+='            }'
-s+='        </style>'
-s+='        <div style="background: linear-gradient(#01aaad, #006666); width: 40vw; margin: 0 auto">'
-s+='            <img src="https://github.com/littleNeuronCell/Merlot-Notification-System/blob/master/ServiceTesting/OTP%20email%20format/fnb_logo.png?raw=true" alt="fnb logo" style="width: 200px; display: block; margin: 0 auto">'
-s+='            <div style="padding: 60px 4vw 0 4vw; font: bold 20px \'Varela Round\', sans-serif; color: white; text-align: center;">'
-s+='                <span>Good Day [Name Surname]</span><br>'
-s+='                <span style="font: 15px \'Varela Round\', sans-serif; position: relative; top: 50px; color:white !important">'
-s+='                    A new One-Time-Pin has been generate <span>'+content.pin+'</span> <br><br>'
-s+='                    This email was sent for the purpose of a one time authentication usage,<br>'
-s+='                    if this was not you please contact 000 000 0000 or ignore this email.<br>'
-s+='                    Thank you for using the FNB app. <br>'
-s+='                </span><br>'
-s+='                <span style="position: relative; top: 70px; font: 15px \'Varela Round\', sans-serif; border-top: solid 1px white; padding: 10px 75px;">'
-s+='                    Terms · Privacy · <a href="https://www.fnb.co.za/" target="_blank">Goto FNB website</a>'
-s+='                </span>'
-s+='                <div style="height: 15vh;"></div>'
-s+='            </div>'
-s+='        </div>'
-s+='        <div style="width: 40vw; margin: 10px auto; text-align: center">'
-s+='            <img src="https://github.com/littleNeuronCell/Merlot-Notification-System/blob/master/ServiceTesting/OTP%20email%20format/fnb_logo2.png?raw=true" alt="fnb logo" style="width: 90px; display: block; margin: 0 auto">'
-s+='            <span style="font: 13px \'Varela Round\', sans-serif; position: relative; color: #999">'
-s+='                    This email was sent through the Merlot Notification System <br>'
-s+='                    Thank you for using the FNB app. <br>'
-s+='                </span><br>'
-s+='        </div>'
-s+='    </div>'
-s+='</body>'
-return s;
+    var s ="";
+    s+='<body>'
+    s+='<style>.im{color:white !important</style>'
+    s+='<div style="background: #f8f8f8">'
+    s+='<meta charset="utf-8">'
+    s+='    <link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet">'
+    s+='        <div style="background: linear-gradient(#01aaad, #006666);">'
+    s+='            <img src="https://raw.githubusercontent.com/littleNeuronCell/Merlot-Notification-System/master/TemplateDesign/OTP%20email%20format/fnb_logo.png" alt="fnb logo" style="width: 200px; display: block; margin: 0 auto">'
+    s+='            <div style="padding: 60px 4vw 0 4vw; font: bold 20px \'Varela Round\', sans-serif; color: white !important; text-align: center;">'
+    s+='                <span>Good Day [Name Surname]</span><br/><br/>'
+    s+='                <span style="font: 15px \'Varela Round\', sans-serif; position: relative; top: 50px; color:white !important">'
+    s+='                    A new One-Time-Pin has been generated <span>'+content.pin+'</span> <br/>'
+    s+='                    This email was sent for the purpose of a one time authentication usage,<br/>'
+    s+='                    if this was not you please contact 000 000 0000 or ignore this email.<br/>'
+    s+='                    Thank you for using the FNB app. <br/>'
+    s+='                </span><br/>'
+    s+='                <span style="position: relative; top: 70px; font: 15px \'Varela Round\', sans-serif; border-top: solid 1px white;color: white !important">'
+    s+='                    Terms · Privacy · <a href="https://www.fnb.co.za/" target="_blank" style="text-decoration: none; color: white;">Go to FNB website</a>'
+    s+='                </span>'
+    s+='                <div style="height: 15vh;"></div>'
+    s+='            </div>'
+    s+='        </div>'
+    s+='        <div style="width: 40vw; margin: 10px auto; text-align: center">'
+    s+='            <img src="https://raw.githubusercontent.com/littleNeuronCell/Merlot-Notification-System/master/TemplateDesign/OTP%20email%20format/fnb_logo2.png" alt="fnb logo" style="width: 90px; display: block; margin: 0 auto">'
+    s+='            <span style="font: 13px \'Varela Round\', sans-serif; position: relative; color: #999">'
+    s+='                    This email was sent through the Merlot Notification System <br/>'
+    s+='                    Thank you for using the FNB app. <br/>'
+    s+='                </span><br/>'
+    s+='        </div>'
+    s+='    </div>'
+    s+='</body>'
+    return s;
+}
+
+function card(content){
+    var s ="";
+    s+='<body>'
+    s+='<style>.im{color:white !important</style>'
+    s+='<div style="background: #f8f8f8">'
+    s+='<meta charset="utf-8">'
+    s+='    <link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet">'
+    s+='        <div style="background: linear-gradient(#01aaad, #006666);">'
+    s+='            <img src="https://raw.githubusercontent.com/littleNeuronCell/Merlot-Notification-System/master/TemplateDesign/OTP%20email%20format/fnb_logo.png" alt="fnb logo" style="width: 200px; display: block; margin: 0 auto">'
+    s+='            <div style="padding: 60px 4vw 0 4vw; font: bold 20px \'Varela Round\', sans-serif; color: white !important; text-align: center;">'
+    s+='                <span>Good Day [Name Surname]</span><br/><br/>'
+    s+='                <span style="font: 15px \'Varela Round\', sans-serif; position: relative; top: 50px; color:white !important">'
+    s+='                Your new card: <span>'+content.cardnumber+'</span> is ready for use.<br>'
+    s+='                A pin has been generated for your card: <span>'+content.pin+'</span>.<br>'
+    s+='                For security reasons please do not share your card number and pin.<br>'
+    s+='                Thank you for using the FNB app. <br>'
+    s+='                </span><br/>'
+    s+='                <span style="position: relative; top: 70px; font: 15px \'Varela Round\', sans-serif; border-top: solid 1px white;color: white !important">'
+    s+='                    Terms · Privacy · <a href="https://www.fnb.co.za/" target="_blank" style="text-decoration: none; color: white;">Go to FNB website</a>'
+    s+='                </span>'
+    s+='                <div style="height: 15vh;"></div>'
+    s+='            </div>'
+    s+='        </div>'
+    s+='        <div style="width: 40vw; margin: 10px auto; text-align: center">'
+    s+='            <img src="https://raw.githubusercontent.com/littleNeuronCell/Merlot-Notification-System/master/TemplateDesign/OTP%20email%20format/fnb_logo2.png" alt="fnb logo" style="width: 90px; display: block; margin: 0 auto">'
+    s+='            <span style="font: 13px \'Varela Round\', sans-serif; position: relative; color: #999">'
+    s+='                    This email was sent through the Merlot Notification System <br/>'
+    s+='                    Thank you for using the FNB app. <br/>'
+    s+='                </span><br/>'
+    s+='        </div>'
+    s+='    </div>'
+    s+='</body>'
+    return s;
+}
+
+function generic(content){
+    var s ="";
+    s+='<body>'
+    s+='<style>.im{color:white !important</style>'
+    s+='<div style="background: #f8f8f8">'
+    s+='<meta charset="utf-8">'
+    s+='    <link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet">'
+    s+='        <div style="background: linear-gradient(#01aaad, #006666);">'
+    s+='            <img src="https://raw.githubusercontent.com/littleNeuronCell/Merlot-Notification-System/master/TemplateDesign/OTP%20email%20format/fnb_logo.png" alt="fnb logo" style="width: 200px; display: block; margin: 0 auto">'
+    s+='            <div style="padding: 60px 4vw 0 4vw; font: bold 20px \'Varela Round\', sans-serif; color: white !important; text-align: center;">'
+    s+='                <span>Good Day [Name Surname]</span><br/><br/>'
+    s+='                <span style="font: 15px \'Varela Round\', sans-serif; position: relative; top: 50px; color:white !important">'
+    s+=                 content.body
+    s+='                <br/>'
+    s+='                </span><br/>'
+    s+='                <span style="position: relative; top: 70px; font: 15px \'Varela Round\', sans-serif; border-top: solid 1px white;color: white !important">'
+    s+='                    Terms · Privacy · <a href="https://www.fnb.co.za/" target="_blank" style="text-decoration: none; color: white;">Go to FNB website</a>'
+    s+='                </span>'
+    s+='                <div style="height: 15vh;"></div>'
+    s+='            </div>'
+    s+='        </div>'
+    s+='        <div style="width: 40vw; margin: 10px auto; text-align: center">'
+    s+='            <img src="https://raw.githubusercontent.com/littleNeuronCell/Merlot-Notification-System/master/TemplateDesign/OTP%20email%20format/fnb_logo2.png" alt="fnb logo" style="width: 90px; display: block; margin: 0 auto">'
+    s+='            <span style="font: 13px \'Varela Round\', sans-serif; position: relative; color: #999">'
+    s+='                    This email was sent through the Merlot Notification System <br/>'
+    s+='                    Thank you for using the FNB app. <br/>'
+    s+='                </span><br/>'
+    s+='        </div>'
+    s+='    </div>'
+    s+='</body>'
+    return s;
 }
 
 /*
