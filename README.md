@@ -14,19 +14,17 @@
 - Reporting
 
 ### Expected from us:
-- Provide a service to other modules to deliver notifications. The requestor must provide the clientID and the content of the notification.
-- Uses a service provided by the Client Information System to obtain e-mail address registered to the clientID and then deliver the notification to the clientID.
-- Set up a mail server to handle email notifications.
-- Keep a Module Audit log and provide a service to produce a portion of the log within a specified time span. 
+- The NS will provide a service when given a clientID, message subject line and a message body, to create an email message to the client.
+  - Use a service provided by the CIS to obtain the email address of the client.
+  - Optionally apply a template to compile the complete a specialized message. For example for sending an OTP, only the OTP needs to be passed to this service while the subject line and wording of the message body can be specified with a OTP message template.
+- The NS will log all its events in a log file and push the file to the Reporting subsystem using a service provided by the reporting subsystem.
 
 ### Subsystems that interacts with us
 
 - **OTP**:
-  - Send Client OTP (probably wants sms)
-- **Client Information System**:
-  - Send miniStatement via Email
-- **Client Account System**:
-  - Notify client of balance update
+  - Send Client OTP 
+- **CRDS**:
+  - Send a card password to a client via e-mail
 
 ### Subsystems that we interact with
 - **Reporting**:
