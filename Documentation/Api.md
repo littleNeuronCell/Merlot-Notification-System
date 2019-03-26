@@ -7,8 +7,9 @@ The service will be accessed by making use of POST requests to our system
 http://merlotnotification.herokuapp.com/
 ``` 
 @return: Will return a json object with contains the following attributes, status, timestamp and message
->   **respCode**: will return a html response code  
->   **respMsg**: will return a message notifying whether or no the function succeeded or why it failed 
+>   **status**: will return either "success" or "failed"  
+>   **timestamp**: will return the date it has taken place  
+>   **message**: will return a message notifying whether or no the function succeeded or why it failed   
 >   for additional info please consult our table below  
 @params:  
 >**data**: Data is an JSON object containing all our relevant information, explaination to follow  
