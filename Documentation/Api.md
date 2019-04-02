@@ -89,22 +89,44 @@ request(options, function (error, response, body) {
 Response response = client.newCall(request).execute();
 ```
 NodeJS
+install the following first 
+```
+npm install --save request
+npm install --save request-promise
+```
 ```javascript
-var request = require("request");
+var rp = require('request-promise');
+var NotificationReponse = await sendmail("8","9898989898","1234");
 
-var options = { method: 'POST',
-  url: 'http://127.0.0.1:5555',
-  headers: 
-   { 'Postman-Token': 'fe00621e-2cbe-4120-83c5-1b340d0b541e',
-     'cache-control': 'no-cache',
-     'Content-Type': 'application/json' },
-  body: '{\n    "ClientID": "001",\n    "Type": "OTP",\n    "Content": {\n        "pin": {{RandomNumber}}\n    }\n}' };
 
-request(options, function (error, response, body) {
-  if (error) throw new Error(error);
+async function sendmail(ClientID,cardNum,cardPin){
 
-  console.log(body);
-});
+	var data = {
+    "ClientID": ClientID,
+    "Type": "card",
+    "Content": {
+        "cardnumber":cardNum,
+        "pin":cardPin
+    }
+}
+	var options = {
+	    method: 'POST',
+	    uri: 'https://merlotcisg7.herokuapp.com/',
+	    body: data,
+	    json: true // Automatically stringifies the body to JSON
+	};
+	 
+	return await rp(options)
+	    .then(function (parsedBody) {
+	        // console.log("l134: "+ parsedBody)
+	        return parsedBody;
+	    })
+	    .catch(function (err) {
+	        console.log(err);
+	    });
+
+}
+
 
 ```
 #### Return message examples:
