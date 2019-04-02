@@ -5,12 +5,12 @@ var os = require("os");
 var Console = require("node-console-input");
 var bodyParser = require('body-parser');
 var Console = require("node-console-input");
-
+var rp = require('request-promise');
+var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 
 
 var Mailer = require("./SendMail.js");
 var logs = require("./logSystem.js");
-var terminal = require("./terminal.js");
 
 const PORT = process.env.PORT || 5000;
 
@@ -26,30 +26,29 @@ app.use(express.static(__dirname+ "js"));
 app.use(bodyParser.json()); 
 app.use(bodyParser.urlencoded({		extended: true		}));
 
-
-terminal.ConsoleInput();
 app.post("/", async function(req,res){
 	try{
 		
 		var data = req.body;
-
-		// console.log(req)
-		console.log(data)
 		if(valid(data)){
-		//	logs.insert(data.ClientID,data.Type,data.Content.pin);			
-		logs.logSystem('{"client_id":"'+data.ClientID+'", "type":"'+data.Type+'", "content":"'+data.Content.pin+'"}');
+			logs.logSystem('{"client_id":"'+data.ClientID+'", "type":"'+data.Type+'", "content":"'+data.Content.pin+'"}');
+				// data.ClientID = "u16009917@tuks.co.za";
+				let clientdata = await getMail(data.ClientID);
+				
+				// console.log("got info: "+ clientdata);
 
-			data.ClientID = "u16009917@tuks.co.za";
-			var mailFeedback = await Mailer.sendMail(data.ClientID,data.Type,data.Content);
-			console.log(mailFeedback);
-			//mailFeedback = JSON.parse(mailFeedback);	
-			/*Send feedback to the person who requested our service*/
-			res.json(mailFeedback);		
-			res.end();
-		}
-		else{
-			res.json(response("failed","Invalid Notification Type or Missing arguements"))
-		}
+				
+				var mailFeedback = await Mailer.sendMail(clientdata,data.Type,data.Content);
+				// console.log("sent mail"+mailFeedback);
+
+				// Send feedback to the person who requested our service
+				res.json(mailFeedback);		
+				res.end();
+
+			}
+			else{
+				res.json(response("failed","Invalid Notification Type or Missing arguements"))
+			}
 	}catch(error){
 		console.log(error);
 	}
@@ -91,31 +90,26 @@ function response(status,message){
 	return response
 }
 
-/* This will convert a file to base 64
-function getBase64(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = error => reject(error);
-  });
+async function getMail(ClientID){
+
+	var data = {
+	  "option": "getEmail",
+	  "clientId": ClientID
+	};
+	var options = {
+	    method: 'POST',
+	    uri: 'https://merlotcisg7.herokuapp.com/',
+	    body: data,
+	    json: true // Automatically stringifies the body to JSON
+	};
+	 
+	return await rp(options)
+	    .then(function (parsedBody) {
+	        // console.log("l134: "+ parsedBody)
+	        return parsedBody;
+	    })
+	    .catch(function (err) {
+	        console.log(err);
+	    });
+
 }
-
-*/
-
-/*
-//return a promise that resolves with a File instance
-function urltoFile(url, filename, mimeType){
-    mimeType = mimeType || (url.match(/^data:([^;]+);/)||'')[1];
-    return (fetch(url)
-        .then(function(res){return res.arrayBuffer();})
-        .then(function(buf){return new File([buf], filename, {type:mimeType});})
-    );
-}
-
-//Usage example:
-urltoFile('data:image/png;base64,......', 'a.png')
-.then(function(file){
-    console.log(file);
-})
-*/
