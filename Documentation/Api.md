@@ -27,7 +27,6 @@ card
     "ClientID": {{ClientID}},
     "Type": "card",
     "Content": {
-        "type" : "new/deactivate/reset"
         "cardnumber": {{RandomCard}},
         "pin":{{cardPin}}
     }
