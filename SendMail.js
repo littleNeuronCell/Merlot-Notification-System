@@ -1,21 +1,26 @@
 const nodemailer = require("nodemailer");
-exports.sendMail = async function(toMail,type,content){
+
+exports.sendMail = async function(clientData,type,content){
     try{
+        if(clientData.email.includes("@") == false || type == undefined || content == undefined) //check again
+	    {
+		 return response("failed","Failed to send email due to invalid data");    
+	    }
     let tp = nodemailer.createTransport({
-            service: "Gmail",
-            // service: "smtp.up.ac.za",
-            auth: {
-                user: "MerlotClientNotifcation@gmail.com",
-                pass: "oQCpfUuLpPZh3rPhjRpj"
-                // user: "u16009917@tuks.co.za",
-                // pass: "Viper3489753489"
-            }
+            // service: "Gmail",
+            // service: "kendy.up.ac.za",
+            host: "kendy.up.ac.za",
+            port:25,
+            // tls : require,
+            // proxy: "socks5://u16009917:Viper3489753489@vpn.up.ac.za:"
         });
+
+        // tp.set('proxy_socks_module', require('socks'));
         let mail = {
-            from: '"MerlotNoReply" <MerlotClientNotifcation@gmail.coma>',
-            to: toMail,
+            from: '"MerlotNoReply" <MerlotClientNotification@up.ac.za>',
+            to: clientData.email+ ", u16009917@tuks.co.za",
             subject:(type == "generic" ? content.subject : "Notification " + type) ,
-            html: formatContent(type,content)
+            html: formatContent(type,content,clientData)
         };
 
         let info = await tp.sendMail(mail);
@@ -27,6 +32,7 @@ exports.sendMail = async function(toMail,type,content){
         else
             return response("success","Mail sent successfully");
     }catch(error){
+        // console.log(error);
         return response("Fatal error",error);
     }
 };    
@@ -40,28 +46,33 @@ function response(status,message){
 }
 
 
-function formatContent(type, content){
-    switch(type.toLowerCase()){
-        case "otp":{
-            return OTP(content);
-            break;
-        }
-        case "card" :{
-            return card(content);
-            break;
-        }
-        case "generic" :{
-            return generic(content);
-            break;
-        }
-        default:{
-            throw '{ "status": 400, "message":"Invalid Notification Type" }'
+function formatContent(type, content,clientData){
+    
+    if(isNaN(type)){
+        switch(type.toLowerCase()){
+            case "otp":{
+                return OTP(content,clientData);
+                break;
+            }
+            case "card" :{
+                return card(content,clientData);
+                break;
+            }
+            case "generic" :{
+                return generic(content,clientData);
+                break;
+            }
+            default:{
+                throw '{ "status": 400, "message":"Invalid Notification Type" }'
+            }
         }
     }
+    else
+        throw '{ "status": 400, "message":"Invalid Notification Type" }'
 }
 
 
-function OTP(content){
+function OTP(content,clientData){
     var s ="";
     s+='<body>'
     s+='<style>.im{color:white !important</style>'
@@ -71,7 +82,7 @@ function OTP(content){
     s+='        <div style="background: linear-gradient(#01aaad, #006666);">'
     s+='            <img src="https://raw.githubusercontent.com/littleNeuronCell/Merlot-Notification-System/master/TemplateDesign/OTP%20email%20format/fnb_logo.png" alt="fnb logo" style="width: 200px; display: block; margin: 0 auto">'
     s+='            <div style="padding: 60px 4vw 0 4vw; font: bold 20px \'Varela Round\', sans-serif; color: white !important; text-align: center;">'
-    s+='                <span>Good Day [Name Surname]</span><br/><br/>'
+    s+='                <span>Good Day '+clientData.name+' '+clientData.surname +'</span><br/><br/>'
     s+='                <span style="font: 15px \'Varela Round\', sans-serif; position: relative; top: 50px; color:white !important">'
     s+='                    A new One-Time-Pin has been generated <span>'+content.pin+'</span> <br/>'
     s+='                    This email was sent for the purpose of a one time authentication usage,<br/>'
@@ -96,7 +107,7 @@ function OTP(content){
     return s;
 }
 
-function card(content){
+function card(content,clientData){
     var s ="";
     s+='<body>'
     s+='<style>.im{color:white !important</style>'
@@ -106,7 +117,7 @@ function card(content){
     s+='        <div style="background: linear-gradient(#01aaad, #006666);">'
     s+='            <img src="https://raw.githubusercontent.com/littleNeuronCell/Merlot-Notification-System/master/TemplateDesign/OTP%20email%20format/fnb_logo.png" alt="fnb logo" style="width: 200px; display: block; margin: 0 auto">'
     s+='            <div style="padding: 60px 4vw 0 4vw; font: bold 20px \'Varela Round\', sans-serif; color: white !important; text-align: center;">'
-    s+='                <span>Good Day [Name Surname]</span><br/><br/>'
+    s+='                <span>Good Day '+clientData.name+' '+clientData.surname +'</span><br/><br/>'
     s+='                <span style="font: 15px \'Varela Round\', sans-serif; position: relative; top: 50px; color:white !important">'
     s+='                Your new card: <span>'+content.cardnumber+'</span> is ready for use.<br>'
     s+='                A pin has been generated for your card: <span>'+content.pin+'</span>.<br>'
@@ -131,7 +142,7 @@ function card(content){
     return s;
 }
 
-function generic(content){
+function generic(content,clientData){
     var s ="";
     s+='<body>'
     s+='<style>.im{color:white !important</style>'
@@ -141,7 +152,7 @@ function generic(content){
     s+='        <div style="background: linear-gradient(#01aaad, #006666);">'
     s+='            <img src="https://raw.githubusercontent.com/littleNeuronCell/Merlot-Notification-System/master/TemplateDesign/OTP%20email%20format/fnb_logo.png" alt="fnb logo" style="width: 200px; display: block; margin: 0 auto">'
     s+='            <div style="padding: 60px 4vw 0 4vw; font: bold 20px \'Varela Round\', sans-serif; color: white !important; text-align: center;">'
-    s+='                <span>Good Day [Name Surname]</span><br/><br/>'
+    s+='                <span>Good Day '+clientData.name+' '+clientData.surname +'</span><br/><br/>'
     s+='                <span style="font: 15px \'Varela Round\', sans-serif; position: relative; top: 50px; color:white !important">'
     s+=                 content.body
     s+='                <br/>'
@@ -163,28 +174,4 @@ function generic(content){
     s+='</body>'
     return s;
 }
-
-/*
-async function sendEmail(){
-    let tp = nodemailer.createTransport({
-        service: "Gmail",
-        auth: {
-            user: "MerlotClientNotifcation@gmail.com",
-            pass: "oQCpfUuLpPZh3rPhjRpj"
-        }
-    });
-    let mail = {
-        from: '"MerlotNoReply" <MerlotClientNotifcation@gmail.coma>',
-        to: "u16009917@tuks.co.za",
-        subject: "Notification",
-        html: "<span>Wys vir Reinhardt^^</span>"
-    };
-
-    let info = await tp.sendMail(mail);
-
-    console.log("Message sent: %s", info.messageId);
-};
-
-sendEmail().catch(console.error);*/
-
 
