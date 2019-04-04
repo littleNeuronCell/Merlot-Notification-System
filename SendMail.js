@@ -1,6 +1,10 @@
 const nodemailer = require("nodemailer");
 exports.sendMail = async function(toMail,type,content){
     try{
+          if(toMail.includes("@") == false || type == undefined || content == undefined) //check again
+	    {
+		 return response("failed","Failed to send email due to invalid data");    
+	    }
     let tp = nodemailer.createTransport({
             service: "Gmail",
             // service: "smtp.up.ac.za",
