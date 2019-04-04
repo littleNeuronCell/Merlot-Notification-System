@@ -3,9 +3,10 @@
 ## Notify
 The Notify is the main service we provide and will send notifications to clients based on their preference type/ type of notification.
 The service will be accessed by making use of POST requests to our system
+~http://merlotnotification.herokuapp.com/~
 ```
-http://merlotnotification.herokuapp.com/
-``` 
+ec2-35-174-115-93.compute-1.amazonaws.com:5000
+```
 @return: Will return a json object with contains the following attributes, status, timestamp and message
 >   **status**: will return either "success" or "failed"  
 >   **timestamp**: will return the date it has taken place  
