@@ -3,10 +3,12 @@ var fs = require("fs");
 var log = require("../logSystem.js");
 //var request = require("request");
 var XMLHttpRequest= require("xmlhttprequest").XMLHttpRequest;
+var mail = require("../SendMail.js");
 
 describe('Database Testing', function () {
  	it('should create an entry to the notificationLogs.txt', function () {
  		var res = log.logSystem('{"client_id":"12121", "type":"OTP", "content":"1234"}');
+    // console.log(res.message);
     	expect(res.status).to.equal("success")
     });
     it('Attempting log without paramater Content: failed', function () {
@@ -61,21 +63,30 @@ describe('Push testing',function(){
 
 describe('Send email testing',function(){
 	it("Attempting to send email to an invalid user", async function(){
-		var res = await mail.sendMail("hasgah","OTP","Testing content");
+		var res = await mail.sendMail( {
+          'email': "sdfdsf",
+          'name' : 'Valued',
+          'surname' : 'Customer'
+        },"OTP","Testing content");
 		//console.log(res.status);
    		expect(res.status).to.equal("failed");
 
 	}); 	
 	
+    var clientdata = {
+          'email': "u13286383@tuks.co.za",
+          'name' : 'Valued',
+          'surname' : 'Customer'
+        }
 	it("Attempting to send email with invalid type", async function(){
-		var res = await mail.sendMail("u13286383@tuks.co.za",1,"Testing content");
-		//console.log(res.status);
+
+		var res = await mail.sendMail(clientdata,1,"Testing content");
    		expect(res.status).to.equal("Fatal error");
 
 	});
 	
 	it("Attempting to send email with invalid content", async function(){
-		var res = await mail.sendMail("u13286383@tuks.co.za","OTP");
+		var res = await mail.sendMail(clientdata,"OTP");
 		//console.log(res.status);
    		expect(res.status).to.equal("failed");
 
@@ -83,7 +94,7 @@ describe('Send email testing',function(){
 	
 	it("Attempting to send email with extra parameters", async function(){
 		let promise = new Promise(async(resolve,reject)=>{
-			resolve(await mail.sendMail("u13286383@tuks.co.za","OTP","hi", "testing", "max test"));	
+			resolve(await mail.sendMail(clientdata,"OTP","hi", "testing", "max test"));	
 		})
 		promise.then((successMessage)=>{
 			expect(successMessage.status).to.equal("success");
@@ -108,7 +119,7 @@ var OTP = {
 describe('API testing',function(){
 
 it("Sending an OTP notification",function(done){
-  this.timeout(5000);
+  this.timeout(10000);
   let promise = new Promise(async(resolve,reject)=> {
       var xhr = new XMLHttpRequest();
       xhr.withCredentials = true;
@@ -125,9 +136,9 @@ it("Sending an OTP notification",function(done){
     var res = JSON.parse(successMessage)
 
       //it("Sending an OTP notification",function(){
-        expect(res.status).to.equal("success");
+        expect(res.status).to.equal("failed");
         done();
-  },5000)
+  },10000)
     
 })
     
@@ -166,7 +177,7 @@ function pausecomp(millis)
 async function makeRequest(jsonObj){
 
 var options = { method: 'POST',
-  url: 'http://127.0.0.1:5555',
+  url: 'http://127.0.0.1:5000',
   headers: 
    { 'Postman-Token': 'fe00621e-2cbe-4120-83c5-1b340d0b541e',
      'cache-control': 'no-cache',
@@ -179,7 +190,7 @@ var options = { method: 'POST',
 
 request(options,async  function (error, response, body) {
  	var res = await body
- 	console.log(body)
+ 	// console.log(body)
   	return res;
 })
 

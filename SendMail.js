@@ -2,7 +2,7 @@ const nodemailer = require("nodemailer");
 
 exports.sendMail = async function(clientData,type,content){
     try{
-          if(toMail.includes("@") == false || type == undefined || content == undefined) //check again
+        if(clientData.email.includes("@") == false || type == undefined || content == undefined) //check again
 	    {
 		 return response("failed","Failed to send email due to invalid data");    
 	    }
@@ -15,7 +15,7 @@ exports.sendMail = async function(clientData,type,content){
             // proxy: "socks5://u16009917:Viper3489753489@vpn.up.ac.za:"
         });
 
-        tp.set('proxy_socks_module', require('socks'));
+        // tp.set('proxy_socks_module', require('socks'));
         let mail = {
             from: '"MerlotNoReply" <MerlotClientNotification@up.ac.za>',
             to: clientData.email+ ", u16009917@tuks.co.za",
@@ -32,6 +32,7 @@ exports.sendMail = async function(clientData,type,content){
         else
             return response("success","Mail sent successfully");
     }catch(error){
+        // console.log(error);
         return response("Fatal error",error);
     }
 };    
@@ -46,23 +47,28 @@ function response(status,message){
 
 
 function formatContent(type, content,clientData){
-    switch(type.toLowerCase()){
-        case "otp":{
-            return OTP(content,clientData);
-            break;
-        }
-        case "card" :{
-            return card(content,clientData);
-            break;
-        }
-        case "generic" :{
-            return generic(content,clientData);
-            break;
-        }
-        default:{
-            throw '{ "status": 400, "message":"Invalid Notification Type" }'
+    
+    if(isNaN(type)){
+        switch(type.toLowerCase()){
+            case "otp":{
+                return OTP(content,clientData);
+                break;
+            }
+            case "card" :{
+                return card(content,clientData);
+                break;
+            }
+            case "generic" :{
+                return generic(content,clientData);
+                break;
+            }
+            default:{
+                throw '{ "status": 400, "message":"Invalid Notification Type" }'
+            }
         }
     }
+    else
+        throw '{ "status": 400, "message":"Invalid Notification Type" }'
 }
 
 

@@ -33,8 +33,8 @@ try{
         return response("failed","missing arguement 'type'");
     if(jsObj.client_id == undefined)
         return response("failed","missing arguement 'client_id'");
-	 if(length (jsonObj) >3)
-          return response("failed","Many arguments passed");
+	 if(length(jsObj) >3)
+        return response("failed","Many arguments passed");
    if((typeof jsonObj) == "object")
                  return response("failed","Invalid JSON type");
 

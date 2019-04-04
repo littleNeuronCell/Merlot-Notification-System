@@ -45,9 +45,15 @@ app.post("/", async function(req,res){
 					'surname' : 'Customer'
 				}
 				// console.log("if statement")
-			}else clientdata = await getMail(data.ClientID);
-			
-			// console.log(clientdata);
+			}
+			else
+				clientdata = await getMail(data.ClientID);
+			if(clientdata.status != undefined){
+				res.json(response(clientdata.status,clientdata.message));
+				res.end()
+				return;
+			}
+			console.log(clientdata);
 			var mailFeedback = await Mailer.sendMail(clientdata,data.Type,data.Content);	
 			res.json(mailFeedback);		
 			res.end();
