@@ -41,7 +41,7 @@ describe('Database Testing', function () {
     });
 
     it('Attempting log with Invalid JSON type', function () {
-   var res = log.logSystem('shudfhfljcle');
+   var res = log.logSystem(232323);
      expect(res.status).to.equal("failed")
      expect(res.message).to.equal("Invalid JSON type");
    });
