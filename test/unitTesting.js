@@ -27,6 +27,25 @@ describe('Database Testing', function () {
     	expect(res.message).to.equal("missing arguement 'client_id'");
 
     });
+	
+	it('Attempting log with empty JSON object', function () {
+ 		var res = log.logSystem();
+    	expect(res.status).to.equal("failed")
+    	expect(res.message).to.equal("Empty JSON object");
+    });
+
+    it('Attempting log with many arguments', function () {
+    var res = log.logSystem('{"client_id":"12121","content":"staff", "type":"OTP","status":"checking","color":"blue"}');
+      expect(res.status).to.equal("failed")
+      expect(res.message).to.equal("Many arguments passed");
+    });
+
+    it('Attempting log with Invalid JSON type', function () {
+   var res = log.logSystem('shudfhfljcle');
+     expect(res.status).to.equal("failed")
+     expect(res.message).to.equal("Invalid JSON type");
+   });
+	
 });
 
 /*
