@@ -3,7 +3,7 @@
 ## Notify
 The Notify is the main service we provide and will send notifications to clients based on their preference type/ type of notification.
 The service will be accessed by making use of POST requests to our system
-~http://merlotnotification.herokuapp.com/~
+~http://merlotnotification.herokuapp.com/~ (no longer in use as we migrated to a new host)
 ```
 ec2-35-174-115-93.compute-1.amazonaws.com:5000
 ```
