@@ -59,6 +59,30 @@ describe('Push testing',function(){
 })
 */
 
+//not working
+describe('Send email testing',function(){
+	it("Attempting to send email to an invalid user",function(){
+		var res = mail.sendMail("hasgah","OTP","Testing content");
+		//console.log(res);
+   		expect(res).to.equal("failed");
+
+	}); 	
+	
+	it("Attempting to send email with invalid type",function(){
+		var res = mail.sendMail("u13286383@tuks.co.za",1,"Testing content");
+		//console.log(res);
+   		expect(res).to.equal("Fatal error");
+
+	});
+	
+	it("Attempting to send email with invalid content",function(){
+		var res = mail.sendMail("u13286383@tuks.co.za","OTP");
+		//console.log(res);
+   		expect(res).to.equal("Fatal error");
+
+	});
+})
+
 
 var url = "http://127.0.0.1:5000";
 var OTP = {
