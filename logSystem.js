@@ -232,7 +232,7 @@ async function push(arr){
     }
     var options  = {
         method: "POST",
-        uri: "https://still-oasis-34724.herokuapp.com",
+        uri: "https://still-oasis-34724.herokuapp.com/uploadLog",
         body: logObj,
         json: true
     }

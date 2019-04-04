@@ -1,8 +1,5 @@
-1 266576 [Thu Apr 04 2019 11:42:03 GMT+0200 (South Africa Standard Time)] card 941250
-2 2 [Thu Apr 04 2019 11:42:05 GMT+0200 (South Africa Standard Time)] OTP 410620
-3 2 [Thu Apr 04 2019 11:42:07 GMT+0200 (South Africa Standard Time)] generic undefined
-4 12121 [Thu Apr 04 2019 14:57:34 GMT+0200 (South Africa Standard Time)] OTP 1234
-5 12121 [Thu Apr 04 2019 14:59:54 GMT+0200 (South Africa Standard Time)] OTP 1234
-6 12121 [Thu Apr 04 2019 15:00:16 GMT+0200 (South Africa Standard Time)] OTP 1234
-7 12121 [Thu Apr 04 2019 15:01:03 GMT+0200 (South Africa Standard Time)] OTP 1234
-8 12121 [Thu Apr 04 2019 15:02:06 GMT+0200 (South Africa Standard Time)] OTP 1234
+1 2 [Thu Apr 04 2019 15:10:34 GMT+0200 (South Africa Standard Time)] OTP 407368
+2 2 [Thu Apr 04 2019 15:10:35 GMT+0200 (South Africa Standard Time)] generic undefined
+3 1 [Thu Apr 04 2019 15:10:36 GMT+0200 (South Africa Standard Time)] card 590844
+4 2 [Thu Apr 04 2019 15:10:37 GMT+0200 (South Africa Standard Time)] OTP 573474
+5 2 [Thu Apr 04 2019 15:10:38 GMT+0200 (South Africa Standard Time)] generic undefined
