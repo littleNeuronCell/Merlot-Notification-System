@@ -2,7 +2,7 @@ var expect = require('chai').expect;
 var fs = require("fs");
 var log = require("../logSystem.js");
 //var request = require("request");
-var XMLHttpRequest= require("xmlhttprequest").XMLRequest;
+var XMLHttpRequest= require("xmlhttprequest").XMLHttpRequest;
 
 describe('Database Testing', function () {
  	it('should create an entry to the notificationLogs.txt', function () {
@@ -59,30 +59,41 @@ describe('Push testing',function(){
 })
 */
 
-//not working
 describe('Send email testing',function(){
-	it("Attempting to send email to an invalid user",function(){
-		var res = mail.sendMail("hasgah","OTP","Testing content");
-		//console.log(res);
-   		expect(res).to.equal("failed");
+	it("Attempting to send email to an invalid user", async function(){
+		var res = await mail.sendMail("hasgah","OTP","Testing content");
+		//console.log(res.status);
+   		expect(res.status).to.equal("failed");
 
 	}); 	
 	
-	it("Attempting to send email with invalid type",function(){
-		var res = mail.sendMail("u13286383@tuks.co.za",1,"Testing content");
-		//console.log(res);
-   		expect(res).to.equal("Fatal error");
+	it("Attempting to send email with invalid type", async function(){
+		var res = await mail.sendMail("u13286383@tuks.co.za",1,"Testing content");
+		//console.log(res.status);
+   		expect(res.status).to.equal("Fatal error");
 
 	});
 	
-	it("Attempting to send email with invalid content",function(){
-		var res = mail.sendMail("u13286383@tuks.co.za","OTP");
-		//console.log(res);
-   		expect(res).to.equal("Fatal error");
+	it("Attempting to send email with invalid content", async function(){
+		var res = await mail.sendMail("u13286383@tuks.co.za","OTP");
+		//console.log(res.status);
+   		expect(res.status).to.equal("failed");
+
+	});
+	
+	it("Attempting to send email with extra parameters", async function(){
+		let promise = new Promise(async(resolve,reject)=>{
+			resolve(await mail.sendMail("u13286383@tuks.co.za","OTP","hi", "testing", "max test"));	
+		})
+		promise.then((successMessage)=>{
+			expect(successMessage.status).to.equal("success");
+		})
+		//~ var res =await mail.sendMail("u13286383@tuks.co.za","OTP","hi", "testing", "max test");
+		//~ console.log(res.status +" here it is ");
+   		//~ expect(res.status).to.equal("success");
 
 	});
 })
-
 
 var url = "http://127.0.0.1:5000";
 var OTP = {
