@@ -1,26 +1,27 @@
 var expect = require('chai').expect;
 var fs = require("fs");
 var log = require("../logSystem.js");
-var request = require("request");
+//var request = require("request");
+var XMLHttpRequest= require("xmlhttprequest").XMLRequest;
 
-describe('Database Testing"', function () {
+describe('Database Testing', function () {
  	it('should create an entry to the notificationLogs.txt', function () {
  		var res = log.logSystem('{"client_id":"12121", "type":"OTP", "content":"1234"}');
     	expect(res.status).to.equal("success")
     });
-    it('Attempting log with paramater Content', function () {
+    it('Attempting log without paramater Content: failed', function () {
  		var res = log.logSystem('{"client_id":"12121", "type":"OTP"}');
     	expect(res.status).to.equal("failed")
     	expect(res.message).to.equal("missing arguement 'content'");
 
     });
-    it('Attempting log with paramater type', function () {
+    it('Attempting log without paramater type: failed', function () {
  		var res = log.logSystem('{"client_id":"12121","content":"1234"}');
     	expect(res.status).to.equal("failed")
     	expect(res.message).to.equal("missing arguement 'type'");
 
     });
-    it('Attempting log with paramater client_id', function () {
+    it('Attempting log without paramater client_id: failed', function () {
  		var res = log.logSystem('{"content":"1234", "type":"OTP"}');
     	expect(res.status).to.equal("failed")
     	expect(res.message).to.equal("missing arguement 'client_id'");
@@ -40,25 +41,63 @@ describe('Push testing',function(){
 */
 
 
-describe('API testing',function(){
-	it("Sending an OTP notification",async function(){
-		const res =await makeRequest(OTP);
-		while(res == undefined){pausecomp(50)}
-		res = JSON.stringify(res);
-
-		console.log("API test: "+res);
-   		// expect(res).to.equal(true);
-
-	}); 	
-})
-
-
+var url = "http://127.0.0.1:5000";
 var OTP = {
     "ClientID": "23432",
     "Type": "OTP",
     "Content": {
         "pin": "123456"
     }
+}
+
+
+describe('API testing',function(){
+
+it("Sending an OTP notification",function(done){
+  this.timeout(5000);
+  let promise = new Promise(async(resolve,reject)=> {
+      var xhr = new XMLHttpRequest();
+      xhr.withCredentials = true;
+      xhr.addEventListener("readystatechange", function () {
+        if (this.readyState === 4) {
+        resolve(this.responseText);
+      }
+    });
+    send(xhr,OTP);
+  })
+
+  promise.then((successMessage)=>{
+    // console.log("yay "+successMessage);
+    var res = JSON.parse(successMessage)
+
+      //it("Sending an OTP notification",function(){
+        expect(res.status).to.equal("success");
+        done();
+  },5000)
+    
+})
+    
+})
+/*
+describe('pushToReporting', function(){
+	it("Pushing data to reporting", function(){
+	
+})
+
+describe('Push testing',function(){
+	it("Push data to Reporting",function(){
+		var res = log.pushTest("notificationLogs.txt",21,fs);
+		console.log(res);
+   		expect(res).to.equal(true);
+
+	}); 	
+})
+*/
+function send(xhr,notify){
+    xhr.open("POST", "http://127.0.0.1:5000");
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.setRequestHeader("cache-control", "no-cache");
+    xhr.send(JSON.stringify(notify));
 }
 
 
