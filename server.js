@@ -6,8 +6,6 @@ var Console = require("node-console-input");
 var bodyParser = require('body-parser');
 var Console = require("node-console-input");
 var rp = require('request-promise');
-var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
-
 
 var Mailer = require("./SendMail.js");
 var logs = require("./logSystem.js");
@@ -16,7 +14,7 @@ const PORT = process.env.PORT || 5000;
 
 var HostAddress = os.hostname();
 console.log("============ Starting server ============");
-// PORT = Console.getConsoleInput("Please select a port: \n",true);//Force input
+// PORT = Console.getConsoleInput("Pleaseselect a port: \n",true);//Force input
 console.log("Waiting for Incoming connections on "+HostAddress+":" + PORT);
 console.log("--------------------------------------------------");
 
@@ -26,29 +24,38 @@ app.use(express.static(__dirname+ "js"));
 app.use(bodyParser.json()); 
 app.use(bodyParser.urlencoded({		extended: true		}));
 
+app.get("/",function(req,res){
+	res.sendFile( __dirname + "/client/index.html");
+});
+
+
 app.post("/", async function(req,res){
 	try{
 		
 		var data = req.body;
 		if(valid(data)){
 			logs.logSystem('{"client_id":"'+data.ClientID+'", "type":"'+data.Type+'", "content":"'+data.Content.pin+'"}');
-				// data.ClientID = "u16009917@tuks.co.za";
-				let clientdata = await getMail(data.ClientID);
-				
-				// console.log("got info: "+ clientdata);
-
-				
-				var mailFeedback = await Mailer.sendMail(clientdata,data.Type,data.Content);
-				// console.log("sent mail"+mailFeedback);
-
-				// Send feedback to the person who requested our service
-				res.json(mailFeedback);		
-				res.end();
-
-			}
-			else{
-				res.json(response("failed","Invalid Notification Type or Missing arguements"))
-			}
+			
+			var clientdata = '';
+			// console.log(data.ClientID);
+			if (data.ClientID.includes('@')){
+				clientdata = {
+					'email': data.ClientID,
+					'name' : 'Valued',
+					'surname' : 'Customer'
+				}
+				// console.log("if statement")
+			}else clientdata = await getMail(data.ClientID);
+			
+			// console.log(clientdata);
+			var mailFeedback = await Mailer.sendMail(clientdata,data.Type,data.Content);	
+			res.json(mailFeedback);		
+			res.end();
+		}
+		else
+		{
+			res.json(response("failed","Invalid Notification Type or Missing arguements"))
+		}
 	}catch(error){
 		console.log(error);
 	}
@@ -77,8 +84,6 @@ function valid(data){
 		else
 			return false;
 	}
-
-
 }
 
 function response(status,message){
@@ -111,5 +116,4 @@ async function getMail(ClientID){
 	    .catch(function (err) {
 	        console.log(err);
 	    });
-
 }
