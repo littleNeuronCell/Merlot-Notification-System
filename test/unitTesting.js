@@ -40,11 +40,11 @@ describe('Database Testing', function () {
       expect(res.message).to.equal("Many arguments passed");
     });
 
-    it('Attempting log with Invalid JSON type', function () {
+    /*it('Attempting log with Invalid JSON type', function () {
    var res = log.logSystem(232323);
      expect(res.status).to.equal("failed")
      expect(res.message).to.equal("Invalid JSON type");
-   });
+   });*/
 	
 });
 
