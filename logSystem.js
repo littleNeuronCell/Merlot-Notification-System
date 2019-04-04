@@ -18,15 +18,39 @@ exports.temp= function(){
 }
 
 exports.logSystem = function (jsonObj) {
+  let jsObj;   
+try{
+  jsObj = JSON.parse(jsonObj);
+}catch(err){
+//  console.log(err);
+  return response("failed","Empty JSON object");
 
-    let jsObj = JSON.parse(jsonObj);   // after receiving json object parse it to retrieve valuable info to work with
-    
+}
     if(jsObj.content == undefined)
         return response("failed","missing arguement 'content'");
     if(jsObj.type == undefined)
         return response("failed","missing arguement 'type'");
     if(jsObj.client_id == undefined)
         return response("failed","missing arguement 'client_id'");
+	 if(length (jsonObj) >3)
+          return response("failed","Many arguments passed");
+   if((typeof jsonObj) == "object")
+                 return response("failed","Invalid JSON type");
+
+
+		 function length(obj) {
+              return Object.keys(obj).length;
+          }
+          function isEmptyObject(obj) {
+            for (var key in obj) {
+              if (Object.prototype.hasOwnProperty.call(obj, key)) {
+                return false;
+              }
+            }
+            return true;
+          }
+
+
 
     let fileName = "notificationLogs.txt"; // file name, may be changed
     let client = jsObj.client_id; // retrieving client id 
