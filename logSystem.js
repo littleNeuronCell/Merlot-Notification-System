@@ -1,6 +1,6 @@
 const fs = require('fs'); // creation of file system obj
 const totalLogs = 10; // how much logs is allowed, might be bigger ammount
-
+const rp = require("request-promise");
 
 
 
@@ -13,6 +13,7 @@ function response(status,message){
     }
     return response
 }
+
 exports.temp= function(){
     return "hi";
 }
@@ -113,28 +114,11 @@ function insertLog(client,type,content, fileName,fs, number) {
                     // console.log('wrote to file successfully');
                     
                     //This is a dummy function, we will pass the name of the reporting function that is responsible for receiving logs
-                    var funcName = function(jsObj) {
-                        var resp;
-                        //console.log(typeof jsObj);
-                        if((typeof jsObj) === "object")
-                        {
-                             resp = '{"status":"Success",' +
-                                 '"timestamp": '+ '"'+new Date()+'", ' +
-                                 '"message": "some info"}';
-                        }
-                        else
-                        {
-                            resp = '{"status":"Failure",' +
-                                '"timestamp": "'+new Date()+'", ' +
-                                '"message": "some info"}';
-                        }
-                        return resp;
-                    };
 
                     // if number of entries exceeds number of allowed logs
                     if(number > totalLogs)
                     {
-                       var status = pushToReporting(fileName, number, fs, funcName)
+                       var status = pushToReporting(fileName, number, fs)
                        if(status) // we going to try and push it to reporting
                         {
                             fs.writeFile(fileName, "", function(){console.log('logs are sent to reporting and log file is cleaned')}); 
@@ -156,7 +140,7 @@ function insertLog(client,type,content, fileName,fs, number) {
     * fs - file system object
     * funcName - name of reporting function to where we will sent our file content
     */
-async function pushToReporting(fileName, ent, fs, funcName) {
+async function pushToReporting(fileName, ent, fs) {
     let reader = fs.createReadStream(fileName);
     let spaceNum = 0;
     let space = 32;
@@ -194,18 +178,20 @@ async function pushToReporting(fileName, ent, fs, funcName) {
             i++;
         }
 
-    }).on('end', function(){
-        if(JSON.parse(funcName(arr)).status === "Success") 
-        {// if we will receive success from reporting subsystem we will return true to the main function in this module
+    }).on('end',async function(){
+        console.log(arr)
+        // if(JSON.parse(await push(arr)).status === "Success") 
+        // {// if we will receive success from reporting subsystem we will return true to the main function in this module
             // console.log(arr);      
             // console.log("Success");
-            return true;
-        }
-        else{
+            // return true;
+        // }
+        // else{
             // console.log("Fail");
-            return false;
-        }
-
+            // return false;
+        // }
+        let feedback = await push(arr);
+        console.log("170: "+ feedback);
 
     });
 }
@@ -230,9 +216,31 @@ exports.pushTest = function (fileName, ent, fs){
         return resp;
     };
 
-    var res = pushToReporting(fileName, ent, fs, funcName); 
+    var res = pushToReporting(fileName, ent, fs, push); 
     console.log("logSystem: "+res);
     return res;  
 }
 
 
+async function push(arr){
+    var object = {
+        "system": "notify",
+        "logs":arr
+    }
+    var logObj = {
+        "logs":object
+    }
+    var options  = {
+        method: "POST",
+        uri: "https://still-oasis-34724.herokuapp.com",
+        body: logObj,
+        json: true
+    }
+
+    rp(options).then((parsedBody)=>{
+        console.log("215: "+ parsedBody);
+        return parsedBody;
+    }).catch((err)=>{
+        console.log(err);
+    });
+}

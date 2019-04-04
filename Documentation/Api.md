@@ -1,48 +1,62 @@
 # API reference:
 ---
 ## Notify
-The Notify is the main service we provide and will send notifications to clients based on their preference type/ type of notification
-```javascript 
-Object notify(Object data);
+The Notify is the main service we provide and will send notifications to clients based on their preference type/ type of notification.
+The service will be accessed by making use of POST requests to our system
 ```
-@return: Will return a json object with contains the following attributes, respCode and respMsg
->   **respCode**: will return a html response code  
->   **respMsg**: will return a message notifying whether or no the function succeeded or why it failed 
+http://merlotnotification.herokuapp.com/
+``` 
+@return: Will return a json object with contains the following attributes, status, timestamp and message
+>   **status**: will return either "success" or "failed"  
+>   **timestamp**: will return the date it has taken place  
+>   **message**: will return a message notifying whether or no the function succeeded or why it failed   
 >   for additional info please consult our table below  
+
 @params:  
 >**data**: Data is an JSON object containing all our relevant information, explaination to follow  
 >**ClientID**: The ID of the client  
 >**Type**: the type of notification to be done  
 >**Content**: the information that will be neatly displayed  
+>  
+> **valid types are**: OTP, card, generic
 
-BankStatement
+### Example Json
+card
 ```javasript
 {
-	"ClientID" : "001",
-	"Type" : "Bankstatement",
-	"Content" : {
-			"0": "25April",
-			"1": "25April",
-			"2": "25April",
-			"3": "25April",
-			"4": "25April",
-			"5": "25April"
-		}
+    "ClientID": {{ClientID}},
+    "Type": "card",
+    "Content": {
+        "type" : "new/deactivate/reset"
+        "cardnumber": {{RandomCard}},
+        "pin":{{cardPin}}
+    }
 }
 ```
 OTP
 ```
 {
-    "ClientID": "001",
+    "ClientID": {{ClientID}},
     "Type": "OTP",
     "Content": {
         "pin": {{RandomNumber}}
     }
 }
 ```
->  - valid types are: OTP, BalanceUpdate, BalanceEnquiry, BankStatement
+Generic
+```javasript
+{
+    "ClientID": {{ClientID}},
+    "Type": "generic",
+    "Content": {
+        "subject": "This is the Subject Header",
+        "body":"a nicely formatted html body that we will combine with our template",
+        "file":{{filesent}}
+    }
+}
+```
 
-example usage: 
+### example usage: 
 Java
 ```java
   OkHttpClient client = new OkHttpClient();
@@ -92,4 +106,19 @@ request(options, function (error, response, body) {
   console.log(body);
 });
 
+```
+#### Return message examples:
+```JSON
+{
+    "status": "success",
+    "timestamp": "2019-03-25T07:50:27.531Z",
+    "message": "Mail sent successfully"
+}
+```
+```JSON
+{
+    "status": "failed",
+    "timestamp": "2019-03-25T07:50:27.531Z",
+    "message": "Invalid Notification Type or Missing arguements"
+}
 ```

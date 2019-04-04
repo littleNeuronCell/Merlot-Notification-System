@@ -1,0 +1,3 @@
+1 266576 [Thu Apr 04 2019 11:42:03 GMT+0200 (South Africa Standard Time)] card 941250
+2 2 [Thu Apr 04 2019 11:42:05 GMT+0200 (South Africa Standard Time)] OTP 410620
+3 2 [Thu Apr 04 2019 11:42:07 GMT+0200 (South Africa Standard Time)] generic undefined
